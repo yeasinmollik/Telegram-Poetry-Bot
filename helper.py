@@ -31,7 +31,8 @@ def searchPoem(update: Update, context: CallbackContext):
 # makes text bold for MarkdownV2
 def bold(s):
     return "*" + s + "*"
-
+def italic(s):
+    return "_" + s + "_"
 
 # add backslash before special chars because MarkdownV2 requires that
 def backslash(s):
