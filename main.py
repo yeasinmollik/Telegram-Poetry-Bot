@@ -105,7 +105,7 @@ def getAllTitles(update: Update, context: CallbackContext):
     keyboard = [[]]
     for i in range(0, len(response)):
         keyboard.append([response[i]['title']])
-    update.message.reply_text(text="*Choose your title\:*",
+    update.message.reply_text(text="*Choose your title:*",
                               reply_markup=ReplyKeyboardMarkup(keyboard, one_time_keyboard=True, resize_keyboard=True,
                                                                input_field_placeholder="Matched poems"),
                               parse_mode="MarkdownV2")
@@ -134,9 +134,10 @@ def listAuthors(update: Update, context: CallbackContext):
     keyboard = [[]]
     for author in authors:
         keyboard.append([author])
-    update.message.reply_text("Choose an author: ",
+    update.message.reply_text("*Choose an author: *",
                               reply_markup=ReplyKeyboardMarkup(keyboard, one_time_keyboard=True, resize_keyboard=True,
-                                                               input_field_placeholder='Authors'))
+                                                               input_field_placeholder='Authors'),
+                              parse_mode="MarkdownV2")
     return POEMS_BY_AN_AUTHOR
 
 
@@ -148,9 +149,10 @@ def poemsByAnAuthor(update: Update, context: CallbackContext):
     for i in range(0, len(titles)):
         keyboard.append([titles[i]['title']])
 
-    update.message.reply_text("Choose any poem: ",
+    update.message.reply_text("*Choose any poem: *",
                               reply_markup=ReplyKeyboardMarkup(keyboard, one_time_keyboard=True, resize_keyboard=True,
-                                                               input_field_placeholder="Poems by " + author))
+                                                               input_field_placeholder=author + "'s Poems"),
+                              parse_mode="MarkdownV2")
     return GET_SPECIFIC_TITLE
 
 

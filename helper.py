@@ -7,10 +7,20 @@ from typing import List, Tuple, cast
 from telegram.chataction import ChatAction
 import requests
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
-from telegram.ext import (Updater, CommandHandler, CallbackQueryHandler, CallbackContext, InvalidCallbackData,
-                          PicklePersistence, MessageHandler, Filters, )
+from telegram.ext import (
+    Updater,
+    CommandHandler,
+    CallbackQueryHandler,
+    CallbackContext,
+    InvalidCallbackData,
+    PicklePersistence,
+    MessageHandler,
+    Filters,
+)
 
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 POEM, QUOTE, EXIT = "poem", "quote", "EXIT"
@@ -20,7 +30,8 @@ def start(update: Update, context: CallbackContext):
     keyboard = [[InlineKeyboardButton("Poem", callback_data=POEM)],
                 [InlineKeyboardButton("Quote", callback_data=QUOTE)],
                 [InlineKeyboardButton("Exit", callback_data=EXIT)]]
-    update.message.reply_text("Please choose: ", reply_markup=InlineKeyboardMarkup(keyboard))
+    update.message.reply_text("Please choose: ",
+                              reply_markup=InlineKeyboardMarkup(keyboard))
 
 
 def searchPoem(update: Update, context: CallbackContext):
@@ -40,8 +51,8 @@ def italic(s):
 # add backslash before special chars because MarkdownV2 requires that
 def backslash(s):
     l = [
-        '_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{',
-        '}', '.', '!'
+        '_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|',
+        '{', '}', '.', '!'
     ]
     for ch in l:
         s = s.replace(ch, "\{}".format(ch))
@@ -72,7 +83,8 @@ def returnPoem(update: Update, context: CallbackContext):
     titleLength = len(response[idx]['title'])
     title = ""
     if titleLength < mxLength:
-        title = " " * int((mxLength + 1 - titleLength) / 2) + response[idx]['title']
+        title = " " * int(
+            (mxLength + 1 - titleLength) / 2) + response[idx]['title']
     else:
         title = response[idx]['title']
 
@@ -83,7 +95,8 @@ def returnPoem(update: Update, context: CallbackContext):
         poem += backslash(s) + "\n"
     poem = title + "\n\n" + poem + "\n\n\- " + bold(response[idx]['author'])
 
-    context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
+    context.bot.send_chat_action(chat_id=update.effective_chat.id,
+                                 action=ChatAction.TYPING)
     sleep(1)
     update.message.reply_text(poem[0:4096], parse_mode="MarkdownV2")
 
