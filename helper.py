@@ -31,8 +31,11 @@ def searchPoem(update: Update, context: CallbackContext):
 # makes text bold for MarkdownV2
 def bold(s):
     return "*" + s + "*"
+
+
 def italic(s):
     return "_" + s + "_"
+
 
 # add backslash before special chars because MarkdownV2 requires that
 def backslash(s):
@@ -104,9 +107,7 @@ p_headers = {
     "X-RapidAPI-Key": "fa62bd94d0msh32c981feda8321bp15849djsne577d809c232"
 }
 
-
-
-authors = {
+authors = [
     'Adam Lindsay Gordon', 'Alan Seeger', 'Alexander Pope',
     'Algernon Charles Swinburne', 'Ambrose Bierce', 'Amy Levy',
     'Andrew Marvell', 'Ann Taylor', 'Anne Bradstreet', 'Anne Bronte',
@@ -146,7 +147,7 @@ authors = {
     'William Ernest Henley', 'William Lisle Bowles', 'William Morris',
     'William Shakespeare', 'William Topaz McGonagall', 'William Vaughn Moody',
     'William Wordsworth'
-}
+]
 
 if __name__ == '__main__':
     main()
