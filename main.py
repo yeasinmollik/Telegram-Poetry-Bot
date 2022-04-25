@@ -36,11 +36,12 @@ poetry_headers = p_headers
 
 
 def start(update: Update, context: CallbackContext):
-    keyboard = [['Random Poem'], ['Search by Title'], ['Browse by Authors'], ['Exit']]
+    print(update.message.from_user.full_name)
+    keyboard = [['🎲 Read a Random Poem'], ['🔍 Search a Poem'], ['🤵 Browse Poems by Authors'], ['❌ Exit']]
 
     update.message.reply_text("*Choose any action: *",
                               reply_markup=ReplyKeyboardMarkup(keyboard, one_time_keyboard=True, resize_keyboard=True,
-                                                               input_field_placeholder='Actions: '),
+                                                               input_field_placeholder='Actions '),
                               parse_mode="MarkdownV2")
 
     return First_STEP
@@ -87,23 +88,21 @@ def browseAuthors(update: Update, context: CallbackContext):
 
 
 def exit(update: Update, context: CallbackContext):
-    update.message.reply_text("Alright!", reply_markup=ReplyKeyboardRemove)
+    update.message.reply_text("Alright!", reply_markup=ReplyKeyboardRemove())
     return ConversationHandler.END
 
 
 def getAllTitles(update: Update, context: CallbackContext):
     title = update.message.text
-    url = "https://poetrydb.org/title/" + "title"
+    url = "https://poetrydb.org/title/" + title
     # gets list of poems using api
     response = json.loads(requests.request("GET", url).text)
     if type(response) is dict:
         update.message.reply_text("No match found! Please /start to search again!")
         return ConversationHandler.END
-
-    maxTitleLen = 0
-
     keyboard = [[]]
-    for i in range(0, len(response)):
+    sz = min(250, len(response))
+    for i in range(0, sz):
         keyboard.append([response[i]['title']])
     update.message.reply_text(text="*Choose your title:*",
                               reply_markup=ReplyKeyboardMarkup(keyboard, one_time_keyboard=True, resize_keyboard=True,
@@ -118,7 +117,7 @@ def getAPoemByTitle(update: Update, context: CallbackContext):
 
     # gets list of poems using api
     response = json.loads(
-        requests.request("GET", poetry_url + "/title/" + title, headers=poetry_headers).text)
+        requests.request("GET", poetry_url + "/title/" + title + ":abs", headers=poetry_headers).text)
 
     # since multiple poems having same keyword are returned, select one poem randomly from them
 
@@ -165,10 +164,10 @@ def main():
 
         states={
             First_STEP: [
-                MessageHandler(Filters.text('Random Poem'), randomPoem),
-                MessageHandler(Filters.text('Search by Title'), searchTitle),
-                MessageHandler(Filters.text("Browse by Authors"), listAuthors),
-                MessageHandler(Filters.text('Exit'), exit),
+                MessageHandler(Filters.text('🎲 Read a Random Poem'), randomPoem),
+                MessageHandler(Filters.text('🔍 Search a Poem'), searchTitle),
+                MessageHandler(Filters.text("🤵 Browse Poems by Authors"), listAuthors),
+                MessageHandler(Filters.text('❌ Exit'), exit),
             ],
             GET_ALL_TITLES: [MessageHandler(Filters.text & ~Filters.command, getAllTitles)],
             GET_SPECIFIC_TITLE: [MessageHandler(Filters.text & ~Filters.command, getAPoemByTitle)],
