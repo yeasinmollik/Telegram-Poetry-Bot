@@ -61,7 +61,7 @@ def randomPoem(update: Update, context: CallbackContext):
 
     poem = ""
     for line in response['lines']:
-        poem += backslash(line)
+        poem += backslash(line + "\n")
 
     poem = bold(backslash(response['title'])) + "\n\-" + italic(backslash(
         response['author'])) + "\n\n" + poem
@@ -119,9 +119,7 @@ def getAPoemByTitle(update: Update, context: CallbackContext):
     response = json.loads(
         requests.request("GET", poetry_url + "/title/" + title + ":abs", headers=poetry_headers).text)
 
-    # since multiple poems having same keyword are returned, select one poem randomly from them
-
-    poem = bold("\t" + backslash(response[0]['title'])) + "\n\- " + italic(backslash(
+    poem = bold(backslash(response[0]['title'])) + "\n\- " + italic(backslash(
         response[0]['author'])) + "\n\n" + backslash("\n".join(
         response[0]['lines']))
     update.message.reply_text(poem[0:4096], parse_mode="MarkdownV2", reply_markup=ReplyKeyboardRemove())
